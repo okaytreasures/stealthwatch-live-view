@@ -20,11 +20,12 @@
       }
       #joinStatus {
         margin-top: 20px;
+        font-size: 18px;
       }
     </style>
   </head>
   <body>
-    <div id="video-container"></div>
+    <div id="video-container" style="width: 100vw; height: 100vh;"></div>
     <div id="joinStatus">Connecting to live stream...</div>
 
     <script>
@@ -32,6 +33,7 @@
       const roomId = urlParams.get('roomId');
 
       const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI1NTZhOWJmOC0yNTIwLTRhY2ItYjg1Ny02YjNjNmJlYjYwYjciLCJwZXJtaXNzaW9ucyI6WyJwbHVnaW5fZG93bmxvYWQiLCJwbHVnaW5fY2FwdHVyZSIsInZpZXdfbWVldGluZyIsImFsbG93X2pvaW4iXSwiaWF0IjoxNzQ2Nzk3OTg1LCJleHAiOjE3NDkzODk5ODV9.S4qNdsjhkELa-5mjZGJNpmfUpksI9s5JbpG3c56iXhw";
+      const apiKey = "556a9bf8-2520-4acb-b857-6b3c6beb60b7";
 
       if (!roomId) {
         document.getElementById('joinStatus').innerText = "Room ID missing from URL.";
@@ -41,15 +43,15 @@
           name: "Emergency Contact",
           meetingId: roomId,
           participantId: "viewer-" + Date.now(),
-          apiKey: "556a9bf8-2520-4acb-b857-6b3c6beb60b7",
+          apiKey: apiKey,
           token: token,
           containerId: "video-container",
-          micEnabled: false,
-          webcamEnabled: false,
+          micEnabled: true,
+          webcamEnabled: true,
           participantCanToggleSelfWebcam: false,
           participantCanToggleSelfMic: false,
           joinScreen: {
-            enabled: false,
+            enabled: true,
           },
           livestream: {
             autoStart: true,
