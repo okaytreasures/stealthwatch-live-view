@@ -1,47 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StealthWatch Live Viewer</title>
-  <script src="https://sdk.videosdk.live/rtc-js-prebuilt/0.3.34/rtc-js-prebuilt.js"></script>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background-color: #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      height: 100%;
-    }
-    #viewer {
-      width: 100%;
-      height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <div id="viewer"></div>
+<html>
+  <head>
+    <title>StealthWatch Live Feed</title>
+    <meta charset="UTF-8" />
+    <script src="https://sdk.videosdk.live/rtc-js-prebuilt/0.3.41/rtc-js-prebuilt.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        color: white;
+        font-family: sans-serif;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      #joinStatus {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="video-container"></div>
+    <div id="joinStatus">Connecting to live stream...</div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const roomId = urlParams.get("roomId") || "test-room-id";
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const roomId = urlParams.get('roomId');
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI1NTZhOWJmOC0yNTIwLTRhY2ItYjg1Ny02YjNjNmJlYjYwYjciLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTc0NjY3NzkyMiwiZXhwIjoxNzQ5MjY5OTIyfQ.p2YigzX6qcQENujc3NJI6llU4MSgLJQ6dLrDERhBkGE";
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI1NTZhOWJmOC0yNTIwLTRhY2ItYjg1Ny02YjNjNmJlYjYwYjciLCJwZXJtaXNzaW9ucyI6WyJwbHVnaW5fZG93bmxvYWQiLCJwbHVnaW5fY2FwdHVyZSIsInZpZXdfbWVldGluZyIsImFsbG93X2pvaW4iXSwiaWF0IjoxNzQ2Nzk3OTg1LCJleHAiOjE3NDkzODk5ODV9.S4qNdsjhkELa-5mjZGJNpmfUpksI9s5JbpG3c56iXhw";
 
-    const meeting = new VideoSDKMeeting();
-    meeting.init({
-      name: "Emergency Stream",
-      meetingId: roomId,
-      participantId: "emergency-contact",
-      micEnabled: false,
-      webcamEnabled: false,
-      token,
-      containerId: "viewer",
-      redirectOnLeave: null,
-    });
-  </script>
-</body>
+      if (!roomId) {
+        document.getElementById('joinStatus').innerText = "Room ID missing from URL.";
+      } else {
+        const meeting = new VideoSDKMeeting();
+        meeting.init({
+          name: "Emergency Contact",
+          meetingId: roomId,
+          participantId: "viewer-" + Date.now(),
+          apiKey: "556a9bf8-2520-4acb-b857-6b3c6beb60b7",
+          token: token,
+          containerId: "video-container",
+          micEnabled: false,
+          webcamEnabled: false,
+          participantCanToggleSelfWebcam: false,
+          participantCanToggleSelfMic: false,
+          joinScreen: {
+            enabled: false,
+          },
+          livestream: {
+            autoStart: true,
+          },
+          permissions: {
+            askToJoin: false,
+          },
+          onMeetingJoined: () => {
+            document.getElementById('joinStatus').style.display = 'none';
+          },
+          onError: (error) => {
+            document.getElementById('joinStatus').innerText = "Error: " + error.message;
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
-
