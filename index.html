@@ -1,72 +1,80 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>StealthWatch Live Feed</title>
-    <meta charset="UTF-8" />
-    <script src="https://sdk.videosdk.live/rtc-js-prebuilt/0.3.41/rtc-js-prebuilt.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background-color: black;
-        color: white;
-        font-family: sans-serif;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      #joinStatus {
-        margin-top: 20px;
-        font-size: 18px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="video-container" style="width: 100vw; height: 100vh;"></div>
-    <div id="joinStatus">Connecting to live stream...</div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StealthWatch Live Feed</title>
+  <script src="https://sdk.videosdk.live/rtc-js-prebuilt/0.3.41/rtc-js-prebuilt.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #video-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    #joinStatus {
+      position: absolute;
+      color: white;
+      font-size: 18px;
+      bottom: 20px;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container"></div>
+  <div id="joinStatus">Connecting to livestream...</div>
 
-    <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const roomId = urlParams.get('roomId');
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('roomId');
 
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI1NTZhOWJmOC0yNTIwLTRhY2ItYjg1Ny02YjNjNmJlYjYwYjciLCJwZXJtaXNzaW9ucyI6WyJwbHVnaW5fZG93bmxvYWQiLCJwbHVnaW5fY2FwdHVyZSIsInZpZXdfbWVldGluZyIsImFsbG93X2pvaW4iXSwiaWF0IjoxNzQ2Nzk3OTg1LCJleHAiOjE3NDkzODk5ODV9.S4qNdsjhkELa-5mjZGJNpmfUpksI9s5JbpG3c56iXhw";
-      const apiKey = "556a9bf8-2520-4acb-b857-6b3c6beb60b7";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI1NTZhOWJmOC0yNTIwLTRhY2ItYjg1Ny02YjNjNmJlYjYwYjciLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIiwicGx1Z2luX2Rvd25sb2FkIiwicGx1Z2luX2NhcHR1cmUiLCJ2aWV3X21lZXRpbmciXSwiaWF0IjoxNzQ3MzExODU4LCJleHAiOjE3NTA5MDM4NTh9.VA9iDtkCdoZnQb7OEHavkPOf_8ak3O_mW_qpMklmkk4"; // updated token
 
-      if (!roomId) {
-        document.getElementById('joinStatus').innerText = "Room ID missing from URL.";
-      } else {
-        const meeting = new VideoSDKMeeting();
-        meeting.init({
-          name: "Emergency Contact",
-          meetingId: roomId,
-          participantId: "viewer-" + Date.now(),
-          apiKey: apiKey,
-          token: token,
-          containerId: "video-container",
-          micEnabled: true,
-          webcamEnabled: true,
-          participantCanToggleSelfWebcam: false,
-          participantCanToggleSelfMic: false,
-          joinScreen: {
-            enabled: true,
-          },
-          livestream: {
-            autoStart: true,
-          },
-          permissions: {
-            askToJoin: false,
-          },
-          onMeetingJoined: () => {
-            document.getElementById('joinStatus').style.display = 'none';
-          },
-          onError: (error) => {
-            document.getElementById('joinStatus').innerText = "Error: " + error.message;
-          }
-        });
-      }
-    </script>
-  </body>
+    if (!roomId) {
+      document.getElementById("joinStatus").innerText = "Missing Room ID. Check the SMS link.";
+    } else {
+      const meeting = new VideoSDKMeeting();
+      meeting.init({
+        name: "Emergency Viewer",
+        meetingId: roomId,
+        participantId: "viewer-" + Date.now(),
+        apiKey: "556a9bf8-2520-4acb-b857-6b3c6beb60b7",
+        token: token,
+        containerId: "video-container",
+        micEnabled: false,
+        webcamEnabled: false,
+        participantCanToggleSelfWebcam: false,
+        participantCanToggleSelfMic: false,
+        joinScreen: {
+          enabled: false,
+        },
+        livestream: {
+          autoStart: true,
+        },
+        permissions: {
+          askToJoin: false,
+        },
+        onMeetingJoined: () => {
+          document.getElementById("joinStatus").style.display = "none";
+        },
+        onError: (error) => {
+          document.getElementById("joinStatus").innerText = "Error: " + error.message;
+        }
+      });
+    }
+  </script>
+</body>
 </html>
