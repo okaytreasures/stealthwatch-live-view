@@ -18,9 +18,15 @@
       align-items: center;
       justify-content: center;
     }
-    #video-container {
+    #video-wrapper {
+      display: flex;
       width: 100vw;
       height: 100vh;
+      justify-content: space-evenly;
+    }
+    #front-camera-container, #back-camera-container {
+      width: 49%;
+      height: 100%;
       position: relative;
     }
     #joinStatus {
@@ -34,7 +40,10 @@
   </style>
 </head>
 <body>
-  <div id="video-container"></div>
+  <div id="video-wrapper">
+    <div id="front-camera-container"></div>
+    <div id="back-camera-container"></div>
+  </div>
   <div id="joinStatus">Connecting to livestream...</div>
 
   <script>
@@ -42,7 +51,6 @@
     const roomId = urlParams.get('roomId');
 
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YTRiNjJmYi05NTNjLTRkOWItODE1OC0zNzQzNmI4YTIzYTQiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIiwiYWxsb3dfcHVibGlzaCIsImFsbG93X3N1YnNjcmliZSIsImFsbG93X21vZGlmeV9sYXlvdXQiLCJhbGxvd19yZWNvcmRpbmciLCJhbGxvd19zdHJlYW0iXSwidmVyc2lvbiI6MiwiaWF0IjoxNzQ2OTM3MjUwLCJleHAiOjE3NTQ3MTMyNTB9.Q_eh1BqgGrDrR_CmgjvhHfW_La2e6eIs06rp0HZwJrg";
-    const apiKey = "6a4b62fb-953c-4d9b-8158-37436b8a23a4";
 
     if (!roomId) {
       document.getElementById("joinStatus").innerText = "Error: Room ID missing from URL.";
@@ -52,24 +60,48 @@
         name: "Emergency Viewer",
         meetingId: roomId,
         participantId: "viewer-" + Date.now(),
-        apiKey: apiKey,
+        apiKey: "6a4b62fb-953c-4d9b-8158-37436b8a23a4",
         token: token,
-        containerId: "video-container",
         micEnabled: false,
         webcamEnabled: false,
-        participantCanToggleSelfWebcam: false,
-        participantCanToggleSelfMic: false,
-        joinScreen: { enabled: false },
-        permissions: { askToJoin: false },
-        livestream: { autoStart: true },
+        containerId: null,
+        joinScreen: {
+          enabled: false,
+        },
+        permissions: {
+          askToJoin: false
+        },
+        livestream: {
+          autoStart: true
+        },
         onMeetingJoined: () => {
           document.getElementById("joinStatus").style.display = "none";
         },
         onError: (error) => {
-          document.getElementById("joinStatus").innerText = "Error: " + (error?.message || "Unknown");
+          document.getElementById("joinStatus").innerText = "Error: " + (error?.message || 'Unknown');
         }
+      });
+
+      meeting.on("participant-joined", ({ participant }) => {
+        participant.on("stream-enabled", ({ stream }) => {
+          if (stream.kind === "video") {
+            const streamEl = document.createElement("video");
+            streamEl.srcObject = stream.mediaStream;
+            streamEl.autoplay = true;
+            streamEl.playsInline = true;
+            streamEl.style.width = "100%";
+            streamEl.style.height = "100%";
+
+            if (participant.displayName?.toLowerCase().includes("front")) {
+              document.getElementById("front-camera-container").appendChild(streamEl);
+            } else {
+              document.getElementById("back-camera-container").appendChild(streamEl);
+            }
+          }
+        });
       });
     }
   </script>
 </body>
 </html>
+
