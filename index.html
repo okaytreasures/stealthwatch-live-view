@@ -41,12 +41,12 @@
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('roomId');
 
-    // 🔐 Replace this with a token that includes "allow_viewer"
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YTRiNjJmYi05NTNjLTRkOWItODE1OC0zNzQzNmI4YTIzYTQiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIiwiYWxsb3dfbGl2ZXN0cmVhbSIsImFsbG93X3JlY29yZGluZyIsImFsbG93X3NjcmVlbl9zaGFyZSIsImFsbG93X3B1Ymxpc2giLCJhbGxvd19zdWJzY3JpYmUiLCJhbGxvd19zdHJlYW0iLCJhbGxvd19tb2RpZnlfbGF5b3V0IiwiYWxsb3dfcmVjb3JkaW5nIiwiYWxsb3dfdmlld2VyIl0sInZlcnNpb24iOjIsImlhdCI6MTc0NzQ5OTQ4NCwiZXhwIjoxNzU1Mjc1NDg0fQ.f2HdcN2_JBQYCnvBr25FuP-BQoFpoCeynSrZPZWqyCQ";
 
     if (!roomId) {
       document.getElementById("joinStatus").innerText = "Missing Room ID. Check the SMS link.";
     } else {
+      console.log("✅ Room ID received:", roomId);
       const meeting = new VideoSDKMeeting();
       meeting.init({
         name: "Emergency Viewer",
@@ -71,10 +71,12 @@
         },
         onMeetingJoined: () => {
           document.getElementById("joinStatus").style.display = "none";
+          console.log("✅ Viewer joined meeting");
         },
         onError: (error) => {
           document.getElementById("joinStatus").innerText =
             "Error: " + (error?.message || "Unknown");
+          console.error("❌ Viewer error:", error);
         }
       });
     }
