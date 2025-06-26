@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+[
+  <View
+    name="Home"
+  />,
+  <View
+    name="Settings"
+  />,
+  <View
+    name="Emergency"
+  />,
+  <View
+    name="Camera"
+  />,
+  <View
+    name="SmsTest"
+  />,
+  <View
+    name="WebRTCPreview"
+  />,
+  <View
+    name="LiveStreamViewer"
+  />,
+]
+`;
