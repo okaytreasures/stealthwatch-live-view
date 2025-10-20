@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../../App';
 
 type SettingsScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Settings'>;
